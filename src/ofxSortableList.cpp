@@ -46,8 +46,8 @@ void ofxSortableList::_add(listitem item, bool at_end) {
     list.at(index).original_position = pos;
 
     //move existing elements below new element
-    if(index != (int)list.size()-1) {
-        shift(index+1);
+    if(!at_end) {
+        shift(index);
     }
 }
 
