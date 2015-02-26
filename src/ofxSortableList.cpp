@@ -3,11 +3,52 @@
 ofxSortableList::ofxSortableList():ofxPanel() {
 }
 
-void ofxSortableList::setup(string title = "") {
+void ofxSortableList::setup(string title) {
 
     ofxPanel::setup(title);
     clear();
 
+}
+
+void ofxSortableList::add(ofParameter<string> &parameter, bool at_end) {
+    _add(listitem(new ofxLabel(parameter, b.width)), at_end);
+}
+
+void ofxSortableList::add(ofParameter<bool> &parameter, bool at_end) {
+    _add(listitem(new ofxToggle(parameter, b.width)), at_end);
+}
+
+void ofxSortableList::add(ofPtr<ofParameter<bool> > parameter, bool at_end) {
+    _add(listitem(new ofxToggle(*parameter.get())), at_end);
+}
+
+void ofxSortableList::add(ofPtr<ofParameter<string> > parameter, bool at_end) {
+    _add(listitem(new ofxLabel(*parameter.get())), at_end);
+}
+
+void ofxSortableList::_add(listitem item, bool at_end) {
+    //create and insert new element in list
+
+    ofxPanel::add(item.get());
+    int index = 0;
+    if(at_end) {
+        list.push_back(item);
+        index = list.size()-1;
+    }
+    else {
+        list.insert(list.begin(),item);
+    }
+
+    //set position of new element
+    ofPoint pos = list.at(index)->getPosition();
+
+    list.at(index)->setPosition(pos);
+    list.at(index).original_position = pos;
+
+    //move existing elements below new element
+    if(index != (int)list.size()-1) {
+        shift(index+1);
+    }
 }
 
 void ofxSortableList::clear() {
@@ -22,11 +63,11 @@ void ofxSortableList::refill() {
     moving_el = -1;
     ofxPanel::clear();
     for(uint i = 0; i < list.size(); i++) {
-        add(list.at(i));
+        readd(list.at(i));
     }
 }
 
-void ofxSortableList::add(listitem &btn) {
+void ofxSortableList::readd(listitem &btn) {
     ofxPanel::add(btn.get());
     btn.original_position = btn->getPosition();
 }
@@ -85,18 +126,21 @@ bool ofxSortableList::mouseDragged(ofMouseEventArgs &args) {
                         for(int i = old_index; i < new_index; i++) {
                             switchPositions(list[i], list[i+1]);
                             std::swap( list[i], list[i+1] );
+                            MovingElementData data(i, i+1, (ofPtr<ofxBaseGui>)list.at(i+1));
+                            ofNotifyEvent(elementMovedStepByStep, data);
                         }
                     }
                     else {
                         for(int i = old_index; i > new_index; i--) {
                             switchPositions(list[i], list[i-1]);
                             std::swap( list[i], list[i-1] );
+                            MovingElementData data(i, i-1, (ofPtr<ofxBaseGui>)list.at(i-1));
+                            ofNotifyEvent(elementMovedStepByStep, data);
                         }
                     }
                 }
 
-                MovingElementData data(old_index, new_index);
-
+                MovingElementData data(old_index, new_index, (ofPtr<ofxBaseGui>)list.at(new_index));
                 ofNotifyEvent(elementMoved, data);
 
                 catched_el = true;
@@ -115,8 +159,9 @@ bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
 
         if(!this->getShape().inside(args.x,args.y)) {
             //remove element
+            RemovedElementData data(moving_el, list.at(moving_el)->getName());
             list.erase(list.begin()+moving_el);
-            ofNotifyEvent(elementRemoved, moving_el);
+            ofNotifyEvent(elementRemoved, data);
             refill();
         }
         else {

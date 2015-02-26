@@ -27,7 +27,7 @@ private:
 
     ofPath *createRandomShape();
 
-    void removeForm(int &index);
+    void removeForm(RemovedElementData& data);
     void reorderForm(MovingElementData& data);
 
     ofxSortableList sortable_panel;

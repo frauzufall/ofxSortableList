@@ -14,22 +14,21 @@ void ofApp::setup(){
 
     for(uint i = 0; i < shape_count; i++) {
 
+        //add shapes controlled by toggles
+        ofPath *path = createRandomShape();
+        shapes.push_back(ofPtr<ofPath>(path));
+
         //create parameter for toggle
-        stringstream name;
-        name << "shape " << i;
-        ofPtr<ofParameter<bool>> t(new ofParameter<bool>(name.str(),true));
-        toggle_parameters.push_back(t);
-
+        ofPtr<ofParameter<bool>> toggle(new ofParameter<bool>());
+        toggle->set("shape " + ofToString(i),true);
+        toggle_parameters.push_back(toggle);
         //set sortable_panel to create a toggle connected to the parameter
-        sortable_panel.add<ofxToggle>(t, true);
-    }
-
-    for(uint i = 0; i < shape_count; i++) {
-        shapes.push_back(ofPtr<ofPath>(createRandomShape()));
+        sortable_panel.add(toggle, true);
+        sortable_panel.getControl("shape " + ofToString(i))->setTextColor(path->getFillColor());
     }
 
     ofAddListener(sortable_panel.elementRemoved, this, &ofApp::removeForm);
-    ofAddListener(sortable_panel.elementMoved, this, &ofApp::reorderForm);
+    ofAddListener(sortable_panel.elementMovedStepByStep, this, &ofApp::reorderForm);
 
 }
 
@@ -53,32 +52,14 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-
-    //update shape visibility according to parameters
-    for(uint i = 0; i < toggle_parameters.size(); i++) {
-
-        if(toggle_parameters.at(i)->get()) {
-
-            // toggle is true, show filled shape
-            shapes.at(i)->setStrokeWidth(0);
-            shapes.at(i)->setFilled(true);
-
-        }
-        else {
-
-            // toggle is false, show stroke of shape
-            shapes.at(i)->setStrokeWidth(5);
-            shapes.at(i)->setFilled(false);
-
-        }
-    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-    for(uint i = 0; i < shapes.size(); i++) {
-        shapes.at(i)->draw();
+    for(int i = shapes.size()-1; i >= 0 ; i--) {
+        if(toggle_parameters.at(i)->get())
+            shapes.at(i)->draw();
     }
 
     sortable_panel.draw();
@@ -91,12 +72,12 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-	
+
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(ofMouseEventArgs &args){
-	
+
 }
 
 //--------------------------------------------------------------
@@ -117,23 +98,26 @@ void ofApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-	
+
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-	
+void ofApp::dragEvent(ofDragInfo dragInfo){
+
 }
 
-//gets called by sortabel_panel when an item is dragged outside of panel
-void ofApp::removeForm(int &index) {
+//gets called by "sortable_panel" when an item is dragged outside of panel
+//deletes the entry in toggle parameters and shapes with the index of the dropped toggle
+void ofApp::removeForm(RemovedElementData &data) {
+
     //keep app parameter list and shape list in sync with sortable_panel
-    toggle_parameters.erase(toggle_parameters.begin()+index);
-    shapes.erase(shapes.begin()+index);
+    toggle_parameters.erase(toggle_parameters.begin()+data.index);
+    shapes.erase(shapes.begin()+data.index);
+
 }
 
-//gets called by sortabel_panel when items ged reordered
-//data.old_index, data.new_index
+//gets called by "sortable_panel" when items get rearranged
+//reorders lists of toggle parameters and shapes according when toggles change indices
 void ofApp::reorderForm(MovingElementData &data) {
     std::swap( toggle_parameters[data.old_index], toggle_parameters[data.new_index] );
     std::swap( shapes[data.old_index], shapes[data.new_index] );
