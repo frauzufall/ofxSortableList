@@ -188,6 +188,10 @@ bool ofxSortableList::mouseScrolled(ofMouseEventArgs &args) {
     return ofxPanel::mouseScrolled(args);
 }
 
+void ofxSortableList::mouseExited(ofMouseEventArgs &args) {
+    return ofxPanel::mouseExited(args);
+}
+
  void ofxSortableList::switchPositions(listitem& t1, listitem& t2) {
      ofPoint p1 = t1.original_position;
      ofPoint p2 = t2.original_position;
@@ -197,6 +201,6 @@ bool ofxSortableList::mouseScrolled(ofMouseEventArgs &args) {
      t2.original_position = p1;
  }
 
- vector<listitem> ofxSortableList::getListItems() {
+ vector<listitem>& ofxSortableList::getListItems() {
      return list;
  }

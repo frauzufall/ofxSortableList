@@ -9,7 +9,11 @@ struct listitem : public ofPtr<ofxBaseGui> {
 };
 
 struct MovingElementData {
-    MovingElementData(int i1, int i2, ofPtr<ofxBaseGui> _widget):old_index(i1),new_index(i2),widget(_widget),name(_widget->getName()) {}
+    MovingElementData(int i1, int i2, ofPtr<ofxBaseGui> _widget)
+        :old_index(i1),
+          new_index(i2),
+          name(_widget->getName()),
+          widget(_widget) {}
     int old_index, new_index;
     string name;
     ofPtr<ofxBaseGui> widget;
@@ -25,6 +29,7 @@ class ofxSortableList : public ofxPanel {
 
 public:
     ofxSortableList();
+    ~ofxSortableList(){}
 
     void setup(string title = "");
 
@@ -52,6 +57,7 @@ public:
     bool mouseReleased(ofMouseEventArgs& args);
     bool mouseMoved(ofMouseEventArgs& args);
     bool mouseScrolled(ofMouseEventArgs& args);
+    void mouseExited(ofMouseEventArgs& args);
 
     //is called after an element is dropped outside of the list.
     ofEvent <RemovedElementData> elementRemoved;
@@ -62,7 +68,7 @@ public:
     //is called for every single index an element is moved. when an element is moved from 2 to 4, it is called two times (2->3, 3->4)
     ofEvent <MovingElementData> elementMovedStepByStep;
 
-    vector<listitem> getListItems();
+    vector<listitem> &getListItems();
 
 private:
     void readd(listitem &btn);
