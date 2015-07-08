@@ -25,7 +25,7 @@ struct RemovedElementData {
     string name;
 };
 
-class ofxSortableList : public ofxPanel {
+class ofxSortableList : public ofxGuiGroup {
 
 public:
     ofxSortableList();

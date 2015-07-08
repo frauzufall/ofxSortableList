@@ -1,11 +1,11 @@
 #include "ofxSortableList.h"
 
-ofxSortableList::ofxSortableList():ofxPanel() {
+ofxSortableList::ofxSortableList():ofxGuiGroup() {
 }
 
 void ofxSortableList::setup(string title) {
 
-    ofxPanel::setup(title);
+    ofxGuiGroup::setup(title);
     clear();
 
 }
@@ -29,7 +29,7 @@ void ofxSortableList::add(ofPtr<ofParameter<string> > parameter, bool at_end) {
 void ofxSortableList::_add(listitem item, bool at_end) {
     //create and insert new element in list
 
-    ofxPanel::add(item.get());
+    ofxGuiGroup::add(item.get());
     int index = 0;
     if(at_end) {
         list.push_back(item);
@@ -54,21 +54,21 @@ void ofxSortableList::_add(listitem item, bool at_end) {
 void ofxSortableList::clear() {
     catched_el = false;
     moving_el = -1;
-    ofxPanel::clear();
+    ofxGuiGroup::clear();
     list.clear();
 }
 
 void ofxSortableList::refill() {
     catched_el = false;
     moving_el = -1;
-    ofxPanel::clear();
+    ofxGuiGroup::clear();
     for(uint i = 0; i < list.size(); i++) {
         readd(list.at(i));
     }
 }
 
 void ofxSortableList::readd(listitem &btn) {
-    ofxPanel::add(btn.get());
+    ofxGuiGroup::add(btn.get());
     btn.original_position = btn->getPosition();
 }
 
@@ -93,7 +93,7 @@ bool ofxSortableList::mousePressed(ofMouseEventArgs &args) {
         }
     }
 
-    return ofxPanel::mousePressed(args);
+    return ofxGuiGroup::mousePressed(args);
 
 }
 
@@ -150,7 +150,7 @@ bool ofxSortableList::mouseDragged(ofMouseEventArgs &args) {
 
     }
 
-    return ofxPanel::mouseDragged(args);
+    return ofxGuiGroup::mouseDragged(args);
 }
 
 bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
@@ -176,20 +176,20 @@ bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
     catched_el = false;
     moving_el = -1;
 
-    return ofxPanel::mouseReleased(args);
+    return ofxGuiGroup::mouseReleased(args);
 
 }
 
 bool ofxSortableList::mouseMoved(ofMouseEventArgs &args) {
-    return ofxPanel::mouseMoved(args);
+    return ofxGuiGroup::mouseMoved(args);
 }
 
 bool ofxSortableList::mouseScrolled(ofMouseEventArgs &args) {
-    return ofxPanel::mouseScrolled(args);
+    return ofxGuiGroup::mouseScrolled(args);
 }
 
 void ofxSortableList::mouseExited(ofMouseEventArgs &args) {
-    return ofxPanel::mouseExited(args);
+    return ofxGuiGroup::mouseExited(args);
 }
 
  void ofxSortableList::switchPositions(listitem& t1, listitem& t2) {
