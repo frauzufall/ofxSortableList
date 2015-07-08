@@ -24,7 +24,7 @@ void ofApp::setup(){
         toggle_parameters.push_back(toggle);
         //set sortable_panel to create a toggle connected to the parameter
         sortable_panel.add(toggle, true);
-        sortable_panel.getControl(i)->setTextColor(path->getFillColor());
+        sortable_panel.getControl("shape " + ofToString(i))->setTextColor(path->getFillColor());
     }
 
     ofAddListener(sortable_panel.elementRemoved, this, &ofApp::removeForm);
