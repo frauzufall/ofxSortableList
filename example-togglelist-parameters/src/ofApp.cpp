@@ -19,9 +19,9 @@ void ofApp::setup(){
         shapes.push_back(ofPtr<ofPath>(path));
 
         //create parameter for toggle
-        ofPtr<ofParameter<bool>> toggle(new ofParameter<bool>());
-        toggle->set("shape " + ofToString(i),true);
-        toggle_parameters.push_back(toggle);
+        ofParameter<bool> toggle;
+        toggle.set("shape " + ofToString(i),true);
+        toggle_parameters.add(toggle);
         //set sortable_panel to create a toggle connected to the parameter
         sortable_panel.add(toggle, true);
         sortable_panel.getControl("shape " + ofToString(i))->setTextColor(path->getFillColor());
@@ -58,7 +58,7 @@ void ofApp::update() {
 void ofApp::draw(){
 
     for(int i = shapes.size()-1; i >= 0 ; i--) {
-        if(toggle_parameters.at(i)->get())
+        if(toggle_parameters.getBool(i))
             shapes.at(i)->draw();
     }
 
@@ -111,7 +111,13 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 void ofApp::removeForm(RemovedElementData &data) {
 
     //keep app parameter list and shape list in sync with sortable_panel
-    toggle_parameters.erase(toggle_parameters.begin()+data.index);
+    ofParameterGroup p;
+    for(int i = 0; i < toggle_parameters.size(); i++){
+        if(i != data.index){
+            p.add(toggle_parameters.get(i));
+        }
+    }
+    toggle_parameters = p;
     shapes.erase(shapes.begin()+data.index);
 
 }
@@ -119,6 +125,18 @@ void ofApp::removeForm(RemovedElementData &data) {
 //gets called by "sortable_panel" when items get rearranged
 //reorders lists of toggle parameters and shapes according when toggles change indices
 void ofApp::reorderForm(MovingElementData &data) {
-    std::swap( toggle_parameters[data.old_index], toggle_parameters[data.new_index] );
+    ofParameterGroup p;
+    for(int i = 0; i < toggle_parameters.size(); i++){
+        if(i == data.new_index){
+            p.add(toggle_parameters.get(data.old_index));
+        }else{
+            if(i == data.old_index){
+                p.add(toggle_parameters.get(data.new_index));
+            }else{
+                p.add(toggle_parameters.get(i));
+            }
+        }
+    }
+    toggle_parameters = p;
     std::swap( shapes[data.old_index], shapes[data.new_index] );
 }

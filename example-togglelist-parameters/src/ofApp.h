@@ -32,7 +32,7 @@ private:
 
     ofxSortableList sortable_panel;
 
-    vector<ofPtr<ofParameter<bool>>> toggle_parameters;
+    ofParameterGroup toggle_parameters;
     vector<ofPtr<ofPath>> shapes;
 
 };

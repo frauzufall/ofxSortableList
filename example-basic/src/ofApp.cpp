@@ -36,6 +36,11 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::exit() {
+    ofRemoveListener(sortable_labels.elementRemoved, this, &ofApp::removed);
+    ofRemoveListener(sortable_labels.elementMoved, this, &ofApp::moved);
+
+    ofRemoveListener(sortable_toggles.elementRemoved, this, &ofApp::removed);
+    ofRemoveListener(sortable_toggles.elementMoved, this, &ofApp::moved);
 }
 
 //--------------------------------------------------------------

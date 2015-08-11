@@ -2,21 +2,15 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 
-struct listitem : public ofPtr<ofxBaseGui> {
-    listitem(ofxBaseGui *t):ofPtr<ofxBaseGui>(t){}
-    listitem(ofPtr<ofxBaseGui> t):ofPtr<ofxBaseGui>(t) {}
-    ofPoint original_position;
-};
-
 struct MovingElementData {
-    MovingElementData(int i1, int i2, ofPtr<ofxBaseGui> _widget)
+    MovingElementData(int i1, int i2, ofxBaseGui* _widget)
         :old_index(i1),
           new_index(i2),
           name(_widget->getName()),
           widget(_widget) {}
     int old_index, new_index;
     string name;
-    ofPtr<ofxBaseGui> widget;
+    ofxBaseGui* widget;
 };
 
 struct RemovedElementData {
@@ -33,20 +27,19 @@ public:
 
     void setup(string title = "");
 
-//    void add(const ofParameterGroup & parameters, bool at_end = true);
     void add(ofParameter<bool> & parameter, bool at_end = true);
-    void add(ofParameter<string> & parameter, bool at_end = true);
+    void add(ofParameter<std::string> & parameter, bool at_end = true);
 
-    void add(ofPtr<ofParameter<bool>> parameter, bool at_end = true);
-    void add(ofPtr<ofParameter<string>> parameter, bool at_end = true);
+    template<class Config>
+    void add(ofParameter <bool> & parameter, const Config & config, bool at_end = true);
 
-    template<class T1, class T2>
-    void add(ofPtr< ofParameter<T2>> item, bool at_end = true) {
-        listitem guiitem(new T1(*item.get()));
-        _add(guiitem, at_end);
-    }
+    template<class Config>
+    void add(ofParameter <std::string> & parameter, const Config & config, bool at_end = true);
 
-    void _add(listitem item, bool at_end);
+    template<class GuiType, typename Type, class C>
+    void add(ofParameter<Type> p, const C & config = true, bool at_end = true);
+
+    void _add(ofxBaseGui* item, bool at_end);
 
     void clear();
     void refill();
@@ -55,9 +48,6 @@ public:
     bool mouseDragged(ofMouseEventArgs& args);
     bool mousePressed(ofMouseEventArgs& args);
     bool mouseReleased(ofMouseEventArgs& args);
-    bool mouseMoved(ofMouseEventArgs& args);
-    bool mouseScrolled(ofMouseEventArgs& args);
-    void mouseExited(ofMouseEventArgs& args);
 
     //is called after an element is dropped outside of the list.
     ofEvent <RemovedElementData> elementRemoved;
@@ -68,14 +58,35 @@ public:
     //is called for every single index an element is moved. when an element is moved from 2 to 4, it is called two times (2->3, 3->4)
     ofEvent <MovingElementData> elementMovedStepByStep;
 
-    vector<listitem> &getListItems();
+protected:
+
+    virtual void addOwned(ofxBaseGui * element, bool at_end = true);
+    virtual void add(ofxBaseGui * element, bool at_end = true);
 
 private:
-    void readd(listitem &btn);
-    void switchPositions(listitem &t1, listitem &t2);
-    vector<listitem> list;
+    void swap(int index1, int index2);
     bool catched_el;
     int moving_el;
+    ofPoint moving_el_old_pos;
+    ofVec2f mouse_offset;
 
 };
 
+
+
+template<class C>
+void ofxSortableList::add(ofParameter <bool> & parameter, const C & config, bool at_end){
+    add<ofxToggle>(parameter, config, at_end);
+}
+
+template<class C>
+void ofxSortableList::add(ofParameter <std::string> & parameter, const C & config, bool at_end){
+    add<ofxLabel>(parameter, config, at_end);
+}
+
+template<class GuiType, typename Type, class C>
+void ofxSortableList::add(ofParameter<Type> p, const C & config, bool at_end){
+    auto inContainerConfig = config;
+    inContainerConfig.inContainer = true;
+    addOwned(new GuiType(p,inContainerConfig), at_end);
+}
