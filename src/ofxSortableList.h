@@ -25,8 +25,6 @@ public:
     ofxSortableList();
     ~ofxSortableList(){}
 
-    void setup(string title = "");
-
     void add(ofParameter<bool> & parameter, bool at_end = true);
     void add(ofParameter<std::string> & parameter, bool at_end = true);
 

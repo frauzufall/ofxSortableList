@@ -3,13 +3,6 @@
 ofxSortableList::ofxSortableList():ofxGuiGroup() {
 }
 
-void ofxSortableList::setup(string title) {
-
-    ofxGuiGroup::setup(title);
-    clear();
-
-}
-
 void ofxSortableList::add(ofParameter<bool> &parameter, bool at_end) {
     add(parameter, ofxToggle::Config(), at_end);
 }
@@ -131,7 +124,7 @@ bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
             RemovedElementData data(moving_el, collection.at(moving_el)->getName());
             collection.erase(collection.begin()+moving_el);
             ofParameterGroup p;
-            for(int i = 0; i < parameters.size(); i++){
+            for(int i = 0; i < (int)parameters.size(); i++){
                 if(i != moving_el){
                     p.add(parameters.get(i));
                 }
@@ -160,8 +153,9 @@ bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
 void ofxSortableList::swap(int index1, int index2){
     if(index1 < (int)collection.size() && index2 < (int)collection.size()){
         std::swap(collection.at(index1), collection.at(index2));
-        ofParameterGroup p;
-        for(int i = 0; i < parameters.size(); i++){
+        ofParameterGroup p = parameters;
+        p.clear();
+        for(int i = 0; i < (int)parameters.size(); i++){
             if(i == index1){
                 p.add(parameters.get(index2));
             }else{
@@ -172,7 +166,6 @@ void ofxSortableList::swap(int index1, int index2){
                 }
             }
         }
-        parameters.clear();
         parameters = p;
         sizeChangedCB();
     }else{
