@@ -10,9 +10,9 @@ void ofApp::setup(){
     sortable_labels.setup("Sortable labels");
     sortable_toggles.setup("Sortable toggles");
 
-    uint element_count = 7;
+    unsigned int element_count = 7;
 
-    for(uint i = 0; i < element_count; i++) {
+    for(unsigned int i = 0; i < element_count; i++) {
 
         ofParameter<string> text;
         text.set("label "+ ofToString(i));

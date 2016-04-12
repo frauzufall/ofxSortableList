@@ -62,7 +62,7 @@ void ofxSortableList::refill() {
     catched_el = false;
     moving_el = -1;
     ofxGuiGroup::clear();
-    for(uint i = 0; i < list.size(); i++) {
+    for(unsigned int i = 0; i < list.size(); i++) {
         readd(list.at(i));
     }
 }
@@ -80,11 +80,11 @@ void ofxSortableList::shift(int start_index) {
 
 bool ofxSortableList::mousePressed(ofMouseEventArgs &args) {
 
-    for(uint i = 0; i < list.size(); i++) {
+    for(unsigned int i = 0; i < list.size(); i++) {
         list.at(i).original_position = list.at(i)->getPosition();
     }
 
-    for(uint i = 0; i < list.size(); i++) {
+    for(unsigned int i = 0; i < list.size(); i++) {
         if(list.at(i)->getShape().inside(args.x,args.y)) {
             // mouse pressed on element
             moving_el = i;

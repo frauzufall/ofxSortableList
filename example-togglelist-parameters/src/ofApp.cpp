@@ -10,9 +10,9 @@ void ofApp::setup(){
 
     sortable_panel.setup("Sortable");
 
-    uint shape_count = 5;
+    unsigned int shape_count = 5;
 
-    for(uint i = 0; i < shape_count; i++) {
+    for(unsigned int i = 0; i < shape_count; i++) {
 
         //add shapes controlled by toggles
         ofPath *path = createRandomShape();
