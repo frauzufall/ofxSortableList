@@ -8,8 +8,9 @@ void ofApp::setup(){
 
 	status = "";
 
-	sortable_labels = gui.getRoot()->add<ofxSortableList>("Sortable labels");
-	sortable_toggles = gui.getRoot()->add<ofxSortableList>("Sortable toggles");
+	ofxPanel* panel = gui.addPanel();
+	sortable_labels = panel->add<ofxSortableList>("Sortable labels");
+	sortable_toggles = panel->add<ofxSortableList>("Sortable toggles");
 
 	uint element_count = 7;
 
@@ -25,7 +26,6 @@ void ofApp::setup(){
 
 	}
 
-	sortable_toggles->setPosition(sortable_labels->getPosition()+ofVec2f(0,sortable_labels->getHeight()+20));
 
 	ofAddListener(sortable_labels->elementRemoved, this, &ofApp::removed);
 	ofAddListener(sortable_labels->elementMoved, this, &ofApp::moved);

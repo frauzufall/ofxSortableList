@@ -25,13 +25,13 @@ public:
 	ofxSortableList(const string &name="", const ofJson &config = ofJson());
 	~ofxSortableList();
 
-//	void clear();
-//	void refill();
-//	void shift(int start_index);
+	void clear();
+	void refill();
+	void shift(int start_index);
 
-//	bool mouseDragged(ofMouseEventArgs& args);
-//	bool mousePressed(ofMouseEventArgs& args);
-//	bool mouseReleased(ofMouseEventArgs& args);
+	bool mouseDragged(ofMouseEventArgs& args);
+	bool mousePressed(ofMouseEventArgs& args);
+	bool mouseReleased(ofMouseEventArgs& args);
 
 	//is called after an element is dropped outside of the list.
 	ofEvent <RemovedElementData> elementRemoved;
@@ -44,17 +44,13 @@ public:
 
 protected:
 
-	void onChildAdded(ElementEventArgs& args);
-	void onChildMove(MoveEventArgs& args);
-	void onChildRemoved(ElementEventArgs& args);
-
-
 private:
 	void swap(int index1, int index2);
-	bool catched_el;
-	int moving_el;
-	ofPoint moving_el_old_pos;
-	ofVec2f mouse_offset;
+	bool draggingElement;
+	ofPoint draggedElementOldPos;
+	ofVec2f mouseOffset;
+	ofxBaseGui* draggedElement;
+	ofxBaseGui* dummy;
 
 };
 
