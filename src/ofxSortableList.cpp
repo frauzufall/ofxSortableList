@@ -40,7 +40,7 @@ bool ofxSortableList::mousePressed(ofMouseEventArgs &args) {
 		return true;
 	}
 
-	for(uint i = 0; i < getControls().size(); i++) {
+	for(unsigned int i = 0; i < getControls().size(); i++) {
 		if(getControl(i)->isMouseOver()) {
 			// mouse pressed on element
 			draggedElement = getControl(i);
