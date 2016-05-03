@@ -12,7 +12,7 @@ ofxSortableList::~ofxSortableList(){
 	unregisterMouseEvents();
 }
 
-//void ofxSortableList::_add(ofxBaseGui* item, bool at_end) {
+//void ofxSortableList::_add(ofxGuiElement* item, bool at_end) {
 //	//create and insert new element in list
 
 //	ofxGuiGroup::add(item);
@@ -47,9 +47,9 @@ bool ofxSortableList::mousePressed(ofMouseEventArgs &args) {
 			draggingElement = true;
 			draggedElementOldPos = draggedElement->getPosition();
 			mouseOffset = draggedElementOldPos - screenToLocal(args);
-			draggedElement->setLayoutPosition(LayoutPosition::ABSOLUTE);
+			draggedElement->setLayoutPosition(DOM::LayoutPosition::ABSOLUTE);
 			draggedElement->setPosition(screenToLocal(args) + mouseOffset);
-			dummy = add<ofxBaseGui>();
+			dummy = add<ofxGuiElement>();
 			//inserts dummy after dragged control as a placeholder
 			dummy->setShape(draggedElement->getShape());
 			moveChildToIndex(dummy, getControlIndex(draggedElement)+1);
@@ -78,7 +78,7 @@ bool ofxSortableList::mouseDragged(ofMouseEventArgs &args) {
 		if(isMouseOver()) {
 			int new_pos = 1;
 			for(int i = 0; i < (int)getControls().size(); i++) {
-				ofxBaseGui* element = getControl(i);
+				ofxGuiElement* element = getControl(i);
 				if(element != draggedElement && element != dummy){
 					if(element->getPosition().y < screenToLocal(args).y) {
 						if(draggedElementIndex < i) {
@@ -151,7 +151,7 @@ bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
 		}
 		else {
 			//reorder elements
-			draggedElement->setLayoutPosition(LayoutPosition::STATIC);
+			draggedElement->setLayoutPosition(DOM::LayoutPosition::STATIC);
 			moveChildToIndex(draggedElement, getControlIndex(dummy));
 		}
 		removeChild(dummy);

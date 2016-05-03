@@ -1,16 +1,16 @@
 #pragma once
 #include "ofMain.h"
-#include "ofxGui.h"
+#include "ofxGuiExtended.h"
 
 struct MovingElementData {
-	MovingElementData(int i1, int i2, ofxBaseGui* _widget)
+	MovingElementData(int i1, int i2, ofxGuiElement* _widget)
 		:old_index(i1),
 		  new_index(i2),
 		  name(_widget->getName()),
 		  widget(_widget) {}
 	int old_index, new_index;
 	string name;
-	ofxBaseGui* widget;
+	ofxGuiElement* widget;
 };
 
 struct RemovedElementData {
@@ -49,8 +49,8 @@ private:
 	bool draggingElement;
 	ofPoint draggedElementOldPos;
 	ofVec2f mouseOffset;
-	ofxBaseGui* draggedElement;
-	ofxBaseGui* dummy;
+	ofxGuiElement* draggedElement;
+	ofxGuiElement* dummy;
 
 };
 
