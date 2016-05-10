@@ -8,7 +8,7 @@ void ofApp::setup(){
 
 	status = "";
 
-	ofxPanel* panel = gui.addPanel();
+	ofxGuiPanel* panel = gui.addPanel();
 	sortable_labels = panel->add<ofxSortableList>("Sortable labels");
 	sortable_toggles = panel->add<ofxSortableList>("Sortable toggles");
 
@@ -17,7 +17,7 @@ void ofApp::setup(){
 	for(unsigned int i = 0; i < element_count; i++) {
 
 		ofParameter<string> text;
-		text.set("label "+ ofToString(i));
+		text.set("label "+ ofToString(i), "");
 		sortable_labels->add(text);
 
 		ofParameter<bool> toggle;

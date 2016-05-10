@@ -1,39 +1,40 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGui.h"
+#include "ofxGuiExtended.h"
 #include "ofxSortableList.h"
 
 class ofApp : public ofBaseApp{
-	
+
 public:
 	void setup();
 	void update();
 	void draw();
-	
+
 	void exit();
 
 	void keyPressed(int key);
 	void keyReleased(int key);
-    void mouseMoved(ofMouseEventArgs &args);
-    void mouseDragged(ofMouseEventArgs &args);
-    void mousePressed(ofMouseEventArgs &args);
-    void mouseReleased(ofMouseEventArgs &args);
+	void mouseMoved(ofMouseEventArgs &args);
+	void mouseDragged(ofMouseEventArgs &args);
+	void mousePressed(ofMouseEventArgs &args);
+	void mouseReleased(ofMouseEventArgs &args);
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
+	void gotMessage(ofMessage msg);
 
 private:
 
-    ofPath *createRandomShape();
+	ofPath *createRandomShape();
 
-    void removeForm(RemovedElementData& data);
-    void reorderForm(MovingElementData& data);
+	void removeForm(RemovedElementData& data);
+	void reorderForm(MovingElementData& data);
 
-    ofxSortableList sortable_panel;
+	ofxGui gui;
+	ofxSortableList *sortable_panel;
 
-    ofParameterGroup toggle_parameters;
-    vector<ofPtr<ofPath>> shapes;
+	ofParameterGroup toggle_parameters;
+	vector<ofPtr<ofPath>> shapes;
 
 };
 

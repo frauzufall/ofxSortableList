@@ -3,7 +3,8 @@
 ofxSortableList::ofxSortableList(const std::string & name, const ofJson& config):ofxGuiGroup(name, config) {
 
 	dummy = nullptr;
-	clear();
+	draggingElement = false;
+	draggedElement = nullptr;
 	registerMouseEvents();
 
 }
@@ -11,22 +12,6 @@ ofxSortableList::ofxSortableList(const std::string & name, const ofJson& config)
 ofxSortableList::~ofxSortableList(){
 	unregisterMouseEvents();
 }
-
-//void ofxSortableList::_add(ofxGuiElement* item, bool at_end) {
-//	//create and insert new element in list
-
-//	ofxGuiGroup::add(item);
-//	int index = children().size()-1;
-//	if(!at_end){
-//		for(int i = index; i > 0; i--){
-//			swap(i,i-1);
-//		}
-//		index = 0;
-//	}
-
-//	sizeChangedCB();
-
-//}
 
 void ofxSortableList::clear() {
 	draggingElement = false;
@@ -43,6 +28,9 @@ bool ofxSortableList::mousePressed(ofMouseEventArgs &args) {
 	for(unsigned int i = 0; i < getControls().size(); i++) {
 		if(getControl(i)->isMouseOver()) {
 			// mouse pressed on element
+			if(getControl(i)->mousePressed(args)){
+				return true;
+			}
 			draggedElement = getControl(i);
 			draggingElement = true;
 			draggedElementOldPos = draggedElement->getPosition();
@@ -98,7 +86,6 @@ bool ofxSortableList::mouseDragged(ofMouseEventArgs &args) {
 				if(old_index != new_index) {
 					if(old_index < new_index) {
 						for(int i = old_index; i < new_index; i++) {
-//							moving_el_old_pos = getControl(i)->getPosition();
 							swap(i, i+1);
 							MovingElementData data(i-1, i, getControl(i+1));
 							ofNotifyEvent(elementMovedStepByStep, data);
@@ -106,7 +93,6 @@ bool ofxSortableList::mouseDragged(ofMouseEventArgs &args) {
 					}
 					else {
 						for(int i = old_index; i > new_index; i--) {
-//							moving_el_old_pos = getControl(i-1)->getPosition();
 							swap(i, i-1);
 							MovingElementData data(i-1, i-2, getControl(i-1));
 							ofNotifyEvent(elementMovedStepByStep, data);
@@ -139,14 +125,6 @@ bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
 			//remove element
 			RemovedElementData data(getControlIndex(dummy)-1, draggedElement->getName());
 			removeChild(draggedElement);
-//			ofParameterGroup p;
-//			for(int i = 0; i < (int)parameters.size(); i++){
-//				if(i != moving_el){
-//					p.add(parameters.get(i));
-//				}
-//			}
-//			parameters.clear();
-//			parameters = p;
 			ofNotifyEvent(elementRemoved, data);
 		}
 		else {
