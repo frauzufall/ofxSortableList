@@ -35,7 +35,7 @@ bool ofxSortableList::mousePressed(ofMouseEventArgs &args) {
 			draggingElement = true;
 			draggedElementOldPos = draggedElement->getPosition();
 			mouseOffset = draggedElementOldPos - screenToLocal(args);
-			draggedElement->setLayoutPosition(DOM::LayoutPosition::ABSOLUTE);
+			draggedElement->setLayoutPosition(DOM::LayoutPosition::POSITION_ABSOLUTE);
 			draggedElement->setPosition(screenToLocal(args) + mouseOffset);
 			dummy = add<ofxGuiElement>();
 			//inserts dummy after dragged control as a placeholder
@@ -129,7 +129,7 @@ bool ofxSortableList::mouseReleased(ofMouseEventArgs &args){
 		}
 		else {
 			//reorder elements
-			draggedElement->setLayoutPosition(DOM::LayoutPosition::STATIC);
+			draggedElement->setLayoutPosition(DOM::LayoutPosition::POSITION_STATIC);
 			moveChildToIndex(draggedElement, getControlIndex(dummy));
 		}
 		removeChild(dummy);
